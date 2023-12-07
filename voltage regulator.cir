@@ -1,0 +1,57 @@
+Zadanie 4
+
+.lib cw4_v2.lib
+.lib modele8.lib
+
+*rezystory
+Rl 0 out 20
+Rf1 0 5 3.3k
+Rf2 5 out 6k
+R4 dz p 4k
+
+C1 p 0 4700u
+
+*diody
+D1 vi1 p 1n4001
+D2 0 vi2 1n4001
+D3 vi2 p 1n4001
+D4 0 vi1 1n4001
+
+*tranzystor
+Q1 p 6 out q2N3055
+
+*wzmacniacz
+.subckt OPAMP2 in_p in_m Vcc Vee out
+
+Rf vcc 8 20k
+Rw 4 vee 100
+Cc 3 5 30p
+
+Q1 2 in_m 1 qnpn
+Q2 3 in_p 1 qnpn
+Q3 1 8 4 qnpn
+Q4 2 2 vcc qpnp
+Q5 3 2 vcc qpnp
+Q6 5 3 vcc qpnp
+Q7 7 8 vee qnpn
+Q8 8 8 vee qnpn
+Q9 vcc 5 out qnpn
+Q10 vee 7 out qpnp
+Q11 6 6 5 qpnp
+Q12 6 6 7 qnpn
+
+.ends
+
+*wywolanie podukladow
+X1 dz 5 p 0 6 OPAMP2
+X2 0 dz BZX84C3V3
+
+*zrodlo
+Vin vi1 vi2 dc 0 ac 1 SIN(0 15 50)
+
+Vp p 0 dc 15
+.dc Vp 2 20 10m
+*.tran 10u 200m 20m 100u
+*.tf V([out]) vin
+.probe
+.end
